@@ -1,0 +1,566 @@
+================================================================================
+     AI LEAD INTELLIGENCE PLATFORM — SYSTEM & IDEA REPORT
+     Generated: 2026-03-07 | Version 1.0 | Status: RUNNING
+================================================================================
+
+
+1. THE IDEA
+================================================================================
+
+Product Name    : AI Lead Intelligence Platform (LeadIntel)
+Tagline         : "Know Who to Call Before You Dial"
+Product Type    : B2B SaaS — Sales Intelligence & Lead Prioritization
+Target Market   : SMB to Mid-Market Sales Teams (5-500 reps)
+Pricing Model   : Subscription SaaS (Freemium → Pro → Enterprise)
+
+PRIMARY OUTCOMES:
+  • Increase sales-qualified-lead (SQL) conversion rate by 30-50%
+  • Reduce time-to-first-contact by 60%
+  • Eliminate manual lead research — AI does it automatically
+  • Personalized outreach at scale with AI-drafted emails
+
+CORE VALUE PROPOSITIONS:
+  VP-1 : Reps spend 100% of their time on leads most likely to convert
+  VP-2 : AI-generated explanations tell reps WHY a lead is hot
+  VP-3 : Real-time buying signals (funding, hiring, tech adoption) surface
+         automatically — no manual research required
+  VP-4 : Personalized AI-drafted email templates per lead
+  VP-5 : Model performance transparency builds trust with sales leadership
+  VP-6 : Seamless CRM-ready export — integrates with Salesforce, HubSpot
+
+HOW IT WORKS:
+  1. Sales team imports leads (CSV upload or manual entry)
+  2. System automatically enriches each lead using free APIs:
+     - Company data from website scraping & DuckDuckGo
+     - Email validation via DNS MX record checks
+     - News signals from NewsAPI (funding, hiring, growth)
+  3. AI scoring engine rates each lead 0-100 across 5 weighted categories
+  4. Leads are classified as Hot (>=70) / Warm (40-69) / Cold (<40)
+  5. Google Gemini AI generates personalized insights & email drafts
+  6. Sales reps see a prioritized dashboard — call the hottest leads first
+
+BUSINESS MODEL:
+  Free Tier  : 100 leads/month, basic scoring
+  Pro Tier   : 2,000 leads/month, AI emails, signals, API access
+  Enterprise : Unlimited leads, custom models, CRM integrations
+
+
+2. THE PROBLEM IT SOLVES
+================================================================================
+
+CURRENT PAIN POINTS FOR SALES TEAMS:
+  • Sales reps waste 65% of their time on leads that will NEVER convert
+  • Manual lead research takes 15-30 minutes per lead
+  • No data-driven way to know WHICH leads to prioritize
+  • Generic outreach emails get <2% response rates
+  • Sales managers have no visibility into pipeline quality
+  • CRM data is incomplete and outdated
+
+WHAT LEADINTEL DOES DIFFERENTLY:
+  • Automated enrichment — fills in missing company data automatically
+  • Signal detection — identifies leads showing buying intent RIGHT NOW
+  • ML-powered scoring — scores based on firmographics, signals, seniority
+  • Explainable AI — tells reps exactly WHY a lead is scored high
+  • Personalized emails — AI writes unique outreach per lead in seconds
+  • Dashboard analytics — pipeline health at a glance
+
+
+3. SYSTEM ARCHITECTURE — WAT FRAMEWORK
+================================================================================
+
+The entire system is built on the WAT Framework (Workflows, Agents, Tools):
+
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                     LAYER 1: WORKFLOWS                          │
+  │  Markdown SOPs defining WHAT to do and WHEN                     │
+  │  ┌──────────────────┐ ┌────────────────┐ ┌──────────────────┐   │
+  │  │ lead_enrichment  │ │ lead_scoring   │ │ email_generation │   │
+  │  │      .md         │ │     .md        │ │      .md         │   │
+  │  └──────────────────┘ └────────────────┘ └──────────────────┘   │
+  └──────────────────────────────┬───────────────────────────────────┘
+                                 │
+                        Workflows define steps
+                                 │
+  ┌──────────────────────────────▼───────────────────────────────────┐
+  │                     LAYER 2: AGENTS                             │
+  │  Python orchestrators that READ workflows and COORDINATE tools  │
+  │  ┌──────────────────────────────────────────────────────────┐   │
+  │  │           LeadEnrichmentAgent                            │   │
+  │  │  • enrich_lead()  → runs enrichment pipeline             │   │
+  │  │  • score_lead()   → runs scoring pipeline                │   │
+  │  │  • generate_ai_content() → runs AI generation            │   │
+  │  └──────────────────────────────────────────────────────────┘   │
+  └──────────────────────────────┬───────────────────────────────────┘
+                                 │
+                      Agents call deterministic tools
+                                 │
+  ┌──────────────────────────────▼───────────────────────────────────┐
+  │                     LAYER 3: TOOLS                              │
+  │  Python scripts that DO the actual work — deterministic & fast  │
+  │                                                                 │
+  │  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐  │
+  │  │ domain_extractor│  │ email_validation│  │  web_scraper   │  │
+  │  │   (free)        │  │   (free/MX)     │  │   (free)       │  │
+  │  └─────────────────┘  └─────────────────┘  └────────────────┘  │
+  │  ┌─────────────────┐  ┌─────────────────┐  ┌────────────────┐  │
+  │  │    news_api     │  │  ai_generator   │  │  lead_scorer   │  │
+  │  │ (free 100/day)  │  │ (Gemini free)   │  │  (rule-based)  │  │
+  │  └─────────────────┘  └─────────────────┘  └────────────────┘  │
+  └──────────────────────────────────────────────────────────────────┘
+
+WHY WAT FRAMEWORK:
+  • Separates AI reasoning (agents) from deterministic execution (tools)
+  • If a tool fails, the agent retries or skips — doesn't crash the pipeline
+  • Workflows are human-readable markdown — non-engineers can understand them
+  • Self-improving: when errors happen, workflows get updated with fixes
+  • Each layer can be tested independently
+
+
+4. TECHNOLOGY STACK
+================================================================================
+
+BACKEND:
+  Language       : Python 3.10+
+  Framework      : FastAPI (async, high-performance)
+  Database       : Supabase (PostgreSQL with RLS, Realtime, Auth)
+  AI/LLM         : Google Gemini 2.0 Flash (free tier: 15 RPM)
+  Task Queue     : FastAPI BackgroundTasks (async processing)
+  Auth           : Supabase Auth (JWT-based)
+
+FRONTEND:
+  Framework      : Next.js 16 (App Router, TypeScript)
+  Styling        : Tailwind CSS + Custom dark theme
+  Charts         : Recharts (bar, line, pie)
+  Icons          : Lucide React
+  State          : React hooks + Zustand (planned)
+  Data Fetching  : Custom API helper with JWT injection
+
+DATABASE (Supabase/PostgreSQL):
+  Tables         : 10 tables with full RLS policies
+  Security       : Row-Level Security — org-scoped access
+  Realtime       : Enabled on leads table for live updates
+  Auth           : Supabase Auth with email/password
+
+FREE APIS:
+  ┌──────────────────┬───────────────────┬──────────────────────────┐
+  │ Service          │ Free Tier         │ Used For                 │
+  ├──────────────────┼───────────────────┼──────────────────────────┤
+  │ Google Gemini    │ 15 requests/min   │ AI insights + emails     │
+  │ NewsAPI.org      │ 100 requests/day  │ Company news & signals   │
+  │ DuckDuckGo API   │ Unlimited         │ Company info lookup      │
+  │ DNS MX Check     │ Unlimited         │ Email validation         │
+  │ Web Scraping     │ Unlimited         │ Company website data     │
+  └──────────────────┴───────────────────┴──────────────────────────┘
+
+  * ZERO paid API subscriptions required to run the platform
+
+
+5. DATABASE SCHEMA
+================================================================================
+
+Supabase Project ID: qrvpoqmndasttgroszku
+URL: https://qrvpoqmndasttgroszku.supabase.co
+
+TABLES (10 total):
+
+  1. organizations
+     - id, name, plan_tier, settings
+     - The tenant root — all data is org-scoped
+
+  2. users
+     - id (links to auth.users), organization_id, email, full_name, role
+     - Roles: admin, manager, rep
+
+  3. leads
+     - Core entity: first_name, last_name, email, company, title, phone
+     - Scoring: current_score, tier (Hot/Warm/Cold), buying_intent_score
+     - Status: lead_status, enrichment_status
+     - Tracking: lead_source, utm_source, utm_campaign
+     - Timestamps: created_at, updated_at, last_enriched_at, last_scored_at
+
+  4. lead_enrichment
+     - Company data: domain, size, industry, funding, tech_stack
+     - Person data: seniority, decision_maker, email_verified
+     - Quality: enrichment_completeness_pct
+
+  5. lead_signals
+     - Buying signals: type, description, source, date, strength (1-10)
+     - Types: FUNDING, HIRING, GROWTH, EXPANSION, EXECUTIVE, IPO, etc.
+
+  6. lead_scores (append-only)
+     - Score history: score, tier, model_version, feature_vector, shap_values
+     - Immutable audit trail for model transparency
+
+  7. lead_ai_content
+     - AI-generated: insight_text, insight_reason, insight_opener
+     - Email draft: subject_a, subject_b, body, tone
+     - Model tracking: llm_model_used
+
+  8. sales_activity (append-only)
+     - Activity log: called, emailed, meeting_booked, qualified, converted
+     - Tracking: outcome, notes, duration_seconds
+
+  9. enrichment_jobs
+     - Job queue: type (enrich/score/research/email), status, retry_count
+     - Error handling: last_error, dead_letter support
+
+  10. api_keys
+      - Customer API key management for external integrations
+
+SECURITY:
+  • Row-Level Security (RLS) on ALL tables
+  • Organization-scoped access — users can only see their org's data
+  • Helper function: get_user_org_id() for RLS policies
+  • Admin role can delete, managers can assign, reps can view
+  • Realtime enabled on leads table for live dashboard
+
+
+6. API DESIGN
+================================================================================
+
+Base URL: http://localhost:8000/v1
+Docs:     http://localhost:8000/docs (Swagger UI — interactive)
+
+AUTHENTICATION:
+  POST /v1/auth/signup        — Create account + organization
+  POST /v1/auth/login         — Sign in, returns JWT
+  GET  /v1/auth/me            — Get current user profile
+
+LEADS CRUD:
+  POST   /v1/leads            — Ingest leads (bulk, with deduplication)
+  POST   /v1/leads/upload-csv — CSV file import (max 10,000 leads)
+  GET    /v1/leads            — List leads (paginated, filtered, sorted)
+  GET    /v1/leads/top        — Get top N leads by score (priority list)
+  GET    /v1/leads/{id}       — Full lead detail (enrichment, signals, AI)
+  PATCH  /v1/leads/{id}       — Update lead fields
+  DELETE /v1/leads/{id}       — Delete lead (admin only)
+
+ACTIVITIES:
+  POST   /v1/leads/{id}/activities  — Log sales activity
+  GET    /v1/leads/{id}/activities  — Get activity history
+
+PIPELINE TRIGGERS:
+  POST   /v1/leads/{id}/enrich     — Queue enrichment
+  POST   /v1/leads/{id}/score      — Queue scoring
+  POST   /v1/pipeline/enrich/{id}  — Trigger enrichment pipeline
+  POST   /v1/pipeline/enrich-all   — Enrich all pending leads
+  POST   /v1/pipeline/score/{id}   — Trigger scoring pipeline
+
+ANALYTICS:
+  GET    /v1/analytics/summary           — Dashboard summary stats
+  GET    /v1/analytics/score-distribution — Score histogram data
+  GET    /v1/analytics/tier-performance   — Conversion rates by tier
+  GET    /v1/analytics/activity-feed      — Recent activity feed
+
+
+7. LEAD SCORING ENGINE
+================================================================================
+
+MODEL: Rule-Based v1.0 (designed to upgrade to XGBoost ML later)
+
+SCORING FORMULA (0-100 total):
+
+  ┌────────────────────────┬────────┬──────────────────────────────────┐
+  │ Category               │ Weight │ What It Measures                 │
+  ├────────────────────────┼────────┼──────────────────────────────────┤
+  │ Firmographic Fit       │  30%   │ Company size, funding, growth,   │
+  │                        │        │ industry match (SaaS/tech)       │
+  ├────────────────────────┼────────┼──────────────────────────────────┤
+  │ Person-Level Fit       │  20%   │ Seniority (C-Suite=10, VP=8),    │
+  │                        │        │ decision maker, email quality    │
+  ├────────────────────────┼────────┼──────────────────────────────────┤
+  │ Signal Strength        │  30%   │ Weighted sum of buying signals   │
+  │                        │        │ (funding=1.5x, hiring=1.2x)     │
+  ├────────────────────────┼────────┼──────────────────────────────────┤
+  │ Data Completeness      │  10%   │ % of enrichment fields filled    │
+  ├────────────────────────┼────────┼──────────────────────────────────┤
+  │ Source Quality          │  10%   │ Referral=10, Demo=9, Organic=7,  │
+  │                        │        │ Paid=5, Import=3, Cold=2         │
+  └────────────────────────┴────────┴──────────────────────────────────┘
+
+TIER CLASSIFICATION:
+  🔥 Hot  : Score >= 70  (call these first!)
+  🌡  Warm : Score 40-69  (nurture and monitor)
+  ❄  Cold : Score < 40   (low priority)
+
+EXPLAINABILITY:
+  • Pseudo-SHAP values show % contribution of each scoring category
+  • Feature importance breakdown displayed on lead detail page
+  • Score history chart tracks changes over time
+
+UPGRADE PATH:
+  • When 1,000+ labeled leads are available → train XGBoost model
+  • SHAP library ready for real feature importance
+  • A/B test: rule-based vs ML model conversion rates
+
+
+8. FRONTEND PAGES
+================================================================================
+
+PAGE: LOGIN & SIGNUP (/auth/login, /auth/signup)
+  • Premium glassmorphism card design
+  • Gradient backgrounds with radial glow effects
+  • Password visibility toggle
+  • Error handling with styled alerts
+  • Supabase Auth integration
+
+PAGE: DASHBOARD (/dashboard)
+  • Greeting with time-of-day awareness
+  • 4 summary cards: Total Leads, Hot Leads, Avg Score, Meetings Booked
+  • Top leads table with avatar initials, score, tier badge, status
+  • Score distribution bar chart (Recharts)
+  • Pipeline overview with Hot/Warm/Cold progress bars
+
+PAGE: LEADS (/leads)
+  • Full leads table with 7 columns
+  • Search bar (name, email, company)
+  • Tier filter buttons (All, 🔥 Hot, 🌡 Warm, ❄ Cold)
+  • Pagination with page controls
+  • "Add Lead" modal — 10-field form with auto-enrichment
+  • "Import CSV" modal — drag-and-drop CSV upload
+  • Click any row → navigate to lead detail
+
+PAGE: LEAD DETAIL (/leads/[id])
+  • Hero section: initials avatar, name, title, company
+  • Score badge with tier classification
+  • AI Intelligence card — reason, signal, conversation opener
+  • AI Email Draft — 2 subject lines + body with copy buttons
+  • Buying Signals list — each signal with type, description, strength
+  • Score History line chart (Recharts)
+  • Score Breakdown — pseudo-SHAP contribution bars
+  • Contact panel — email, phone, LinkedIn with copy buttons
+  • Company panel — name, website, size, HQ, founded
+  • Funding panel — total raised, last round
+  • Tech Stack badges
+  • Re-Enrich and Log Activity action buttons
+
+PAGE: ANALYTICS (/analytics)
+  • 4 metric cards: Model Version, Scored Leads, Avg Score, Total
+  • Tier Distribution — donut/pie chart
+  • Conversion Rate by Tier — bar chart
+  • Model Information — current model, next upgrade, explainability
+
+PAGE: SETTINGS (/settings)
+  • General: workspace name, scoring thresholds, email tone
+  • Team: invite members, assign roles
+  • Integrations: API keys for Gemini, NewsAPI, Hunter, CRM webhook
+  • Billing: current plan, usage, upgrade options
+
+
+9. DIRECTORY STRUCTURE
+================================================================================
+
+LeadGen Ai/
+├── main.py                          # FastAPI entry point (all routers mounted)
+├── requirements.txt                 # Python dependencies (16 packages)
+├── .env                             # Environment variables (secrets)
+├── .env.example                     # Template for new developers
+├── .gitignore                       # Git exclusions
+├── SYSTEM_REPORT.txt                # This file
+│
+├── db/                              # Database layer
+│   ├── __init__.py
+│   └── client.py                    # Supabase singleton (anon + service)
+│
+├── models/                          # Pydantic data models
+│   ├── __init__.py
+│   └── schemas.py                   # Enums, request/response models
+│
+├── api/                             # FastAPI routes & middleware
+│   ├── __init__.py
+│   ├── middleware/
+│   │   ├── __init__.py
+│   │   └── auth.py                  # JWT verification via Supabase
+│   └── routes/
+│       ├── __init__.py
+│       ├── auth.py                  # Signup, Login, Me
+│       ├── leads.py                 # Full CRUD + CSV upload
+│       ├── analytics.py             # Dashboard stats & charts
+│       └── pipeline.py              # Enrichment/scoring triggers
+│
+├── tools/                           # WAT Layer 3 — Deterministic execution
+│   ├── __init__.py
+│   ├── domain_extractor.py          # Extract company domain from email/URL
+│   ├── email_validation.py          # Validate email format + MX records
+│   ├── web_scraper.py               # Scrape company websites + DuckDuckGo
+│   ├── news_api.py                  # NewsAPI + signal detection
+│   ├── ai_generator.py              # Gemini AI insights + email drafts
+│   └── lead_scorer.py               # Rule-based 5-category scoring
+│
+├── agents/                          # WAT Layer 2 — AI orchestrators
+│   ├── __init__.py
+│   └── enrichment_agent.py          # Full pipeline: enrich→score→AI
+│
+├── workflows/                       # WAT Layer 1 — Markdown SOPs
+│   ├── lead_enrichment.md           # 8-step enrichment workflow
+│   ├── lead_scoring.md              # 6-step scoring workflow
+│   └── email_generation.md          # 4-step AI email workflow
+│
+├── workers/                         # Background job processing (planned)
+│   └── __init__.py
+│
+├── ml/                              # ML model training (planned for v2)
+│   └── __init__.py
+│
+├── .tmp/                            # Temporary processing files
+│
+├── *.sql                            # Database migration scripts
+│   ├── organizations_table.sql
+│   ├── leads_table.sql
+│   ├── enrichment_signals_scores_tables.sql
+│   ├── ai_content_activity_jobs_apikeys.sql
+│   ├── enable_rls_policies.sql
+│   └── add_updated_at_trigger_and_realtime.sql
+│
+└── frontend/                        # Next.js 16 Application
+    ├── package.json                 # NPM dependencies
+    ├── .env.local                   # Frontend env vars (Supabase keys)
+    ├── next.config.ts               # Next.js configuration
+    ├── tailwind.config.ts           # Tailwind CSS config
+    └── src/
+        ├── lib/
+        │   ├── supabase.ts          # Supabase client + API helper
+        │   └── utils.ts             # Formatting, colors, time utilities
+        ├── components/
+        │   └── Sidebar.tsx          # Navigation sidebar component
+        └── app/
+            ├── globals.css          # Custom dark theme CSS (glassmorphism)
+            ├── layout.tsx           # Root layout with metadata
+            ├── page.tsx             # Root — redirects to dashboard/login
+            ├── auth/
+            │   ├── login/page.tsx   # Login page
+            │   └── signup/page.tsx  # Signup page
+            ├── dashboard/
+            │   └── page.tsx         # Main dashboard
+            ├── leads/
+            │   ├── page.tsx         # Leads table
+            │   └── [id]/page.tsx    # Lead detail view
+            ├── analytics/
+            │   └── page.tsx         # Analytics & charts
+            └── settings/
+                └── page.tsx         # Settings page
+
+
+10. ENRICHMENT PIPELINE FLOW
+================================================================================
+
+When a new lead is created (manual or CSV import), the following happens:
+
+  TRIGGER: Lead created with auto_enrich=true
+       │
+       ▼
+  ┌─ STEP 1: Extract Domain ──────────────────────────────────────────┐
+  │  Tool: domain_extractor.py                                        │
+  │  From email (skip gmail/yahoo) or company_website URL             │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 2: Scrape Company Website ──────────────────▼───────────────┐
+  │  Tool: web_scraper.py → scrape_company_website()                  │
+  │  Extract: title (company name), meta description                  │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 3: Search Company Info ─────────────────────▼───────────────┐
+  │  Tool: web_scraper.py → search_company_info()                     │
+  │  DuckDuckGo Instant Answer API (free, unlimited)                  │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 4: Validate Email ──────────────────────────▼───────────────┐
+  │  Tool: email_validation.py                                        │
+  │  Check: format regex + DNS MX record lookup                       │
+  │  Output: email_verified, email_deliverable, is_professional       │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 5: Detect Buying Signals ───────────────────▼───────────────┐
+  │  Tool: news_api.py                                                │
+  │  Search company in NewsAPI (100 free requests/day)                │
+  │  Detect: FUNDING, HIRING, EXECUTIVE, EXPANSION signals           │
+  │  Each signal gets a strength score (1-10)                         │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 6: Calculate Completeness ──────────────────▼───────────────┐
+  │  Count filled fields / total fields × 100                         │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 7: Save & Update Status ────────────────────▼───────────────┐
+  │  Upsert enrichment data → lead_enrichment table                   │
+  │  Insert signals → lead_signals table                              │
+  │  Update lead → enrichment_status = 'complete'                     │
+  └───────────────────────────────────────────────────┬───────────────┘
+                                                      │
+  ┌─ STEP 8: Run Scoring Pipeline ────────────────────▼───────────────┐
+  │  Automatically triggers score_lead()                              │
+  │  Calculates 0-100 score across 5 categories                       │
+  │  Assigns Hot/Warm/Cold tier                                       │
+  │  If score >= 50: triggers AI content generation                   │
+  │    → Google Gemini generates insight + email draft                │
+  └───────────────────────────────────────────────────────────────────┘
+
+
+11. RUNNING THE APPLICATION
+================================================================================
+
+PREREQUISITES:
+  • Python 3.10+ installed
+  • Node.js 18+ installed
+  • Supabase project created (ID: qrvpoqmndasttgroszku)
+  • .env file configured with API keys
+
+BACKEND (FastAPI):
+  Terminal 1:
+    cd "LeadGen Ai"
+    pip install -r requirements.txt
+    python -m uvicorn main:app --reload --port 8000
+
+  Backend will be available at:
+    API:  http://localhost:8000
+    Docs: http://localhost:8000/docs (Swagger UI)
+
+FRONTEND (Next.js):
+  Terminal 2:
+    cd "LeadGen Ai/frontend"
+    npm install
+    npm run dev
+
+  Frontend will be available at:
+    App: http://localhost:3000
+
+CURRENT STATUS:
+  ✅ Backend:  RUNNING on http://localhost:8000 (healthy)
+  ✅ Frontend: RUNNING on http://localhost:3000 (ready)
+  ✅ Database: Supabase cloud (10 tables, RLS enabled)
+  ✅ API Docs: http://localhost:8000/docs (Swagger UI)
+
+
+12. FUTURE ROADMAP
+================================================================================
+
+PHASE 2.5 — ENHANCED ENRICHMENT:
+  □ LinkedIn scraping tool
+  □ Wappalyzer integration (tech stack detection)
+  □ Hunter.io email finder (free tier: 25/month)
+  □ Glassdoor company data
+
+PHASE 3.5 — ML UPGRADE:
+  □ XGBoost model training when 1,000+ labeled leads available
+  □ Real SHAP values for feature importance
+  □ A/B testing framework (rule-based vs ML)
+  □ Model retraining pipeline
+
+PHASE 4 — AUTOMATION:
+  □ Daily lead re-scoring cron job
+  □ Slack/Teams notifications for new Hot leads
+  □ CRM sync (Salesforce, HubSpot)
+  □ Email sequence automation
+  □ Lead assignment based on rep capacity
+
+PHASE 5 — SCALE:
+  □ Multi-tenant architecture optimization
+  □ Batch enrichment worker (Redis queue)
+  □ Webhook integrations
+  □ Custom scoring model per organization
+  □ White-label support
+
+
+================================================================================
+                         END OF SYSTEM REPORT
+================================================================================

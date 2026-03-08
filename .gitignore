@@ -1,0 +1,11 @@
+.env
+.tmp/
+__pycache__/
+*.pyc
+node_modules/
+.next/
+credentials.json
+token.json
+*.pkl
+venv/
+.venv/
