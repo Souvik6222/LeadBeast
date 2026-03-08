@@ -23,7 +23,8 @@ export default function AuthCallbackPage() {
                 if (session?.user) {
                     // Check if user has a profile (org) already
                     try {
-                        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/v1';
+                        const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/v1';
+                        const API_URL = rawApiUrl.endsWith('/v1') ? rawApiUrl : `${rawApiUrl}/v1`;
                         const res = await fetch(`${API_URL}/auth/check-profile`, {
                             headers: {
                                 'Authorization': `Bearer ${session.access_token}`,

@@ -5,7 +5,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOi
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/v1';
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/v1';
+export const API_URL = rawApiUrl.endsWith('/v1') ? rawApiUrl : `${rawApiUrl}/v1`;
 
 export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     const session = await supabase.auth.getSession();
