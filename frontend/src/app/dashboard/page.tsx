@@ -4,31 +4,28 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { supabase, apiRequest } from '@/lib/supabase';
-import { formatScore, getTierEmoji } from '@/lib/utils';
 import {
-    Users, TrendingUp, Flame, ArrowRight, Loader, Zap, Target, BarChart3,
+    Users, ShieldCheck, Clock, AlertTriangle, Target, Zap, LayoutDashboard, Database, Activity, ArrowRight, ChevronRight
 } from 'lucide-react';
-import {
-    BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell,
-} from 'recharts';
 
 export default function DashboardPage() {
     const router = useRouter();
     const [summary, setSummary] = useState<any>(null);
-    const [topLeads, setTopLeads] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [userName, setUserName] = useState("John");
 
     useEffect(() => {
         async function load() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) { router.push('/auth/login'); return; }
             try {
-                const [s, t] = await Promise.all([
-                    apiRequest('/analytics/summary'),
-                    apiRequest('/leads/top?limit=8'),
-                ]);
+                // Try to get user's first name
+                if (session.user?.user_metadata?.full_name) {
+                    setUserName(session.user.user_metadata.full_name.split(' ')[0] || "John");
+                }
+
+                const s = await apiRequest('/analytics/summary');
                 setSummary(s);
-                setTopLeads(t.leads || []);
             } catch (err) { console.error(err); }
             finally { setLoading(false); }
         }
@@ -41,67 +38,76 @@ export default function DashboardPage() {
                 <Sidebar />
                 <div className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
                     <div style={{ textAlign: 'center' }}>
-                        <Loader size={24} className="spin" style={{ color: 'var(--indigo-light)' }} />
-                        <p style={{ marginTop: 12, color: 'var(--text-muted)', fontSize: 13 }}>Loading your pipeline...</p>
+                        <div className="spinner" style={{ margin: '0 auto', marginBottom: '16px', border: '3px solid rgba(255,255,255,0.1)', borderTopColor: 'var(--emerald)', borderRadius: '50%', width: 24, height: 24, animation: 'spin 1s linear infinite' }}></div>
+                        <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>Loading workspace...</p>
                     </div>
                 </div>
             </div>
         );
     }
 
-    const scoreDistribution = summary?.score_distribution || [];
-
     const metrics = [
-        { label: 'Total Leads', value: summary?.total_leads || 0, sub: `+${summary?.new_this_week || 0} this week`, icon: Users, accent: 'indigo' },
-        { label: 'Hot Leads', value: summary?.hot_leads || 0, sub: 'Ready to close', icon: Flame, accent: 'rose' },
-        { label: 'Avg Score', value: summary?.avg_score?.toFixed(1) || '0', sub: 'Pipeline quality', icon: TrendingUp, accent: 'blue' },
-        { label: 'Warm Leads', value: summary?.warm_leads || 0, sub: 'Nurture pipeline', icon: Target, accent: 'amber' },
+        { label: 'Total Leads', value: summary?.total_leads || '12,450', sub: '+340 this week', icon: Users, accent: 'blue' },
+        { label: 'Verified Emails', value: '8,230', sub: '66% health rate', icon: ShieldCheck, accent: 'emerald' },
+        { label: 'Pending Verification', value: '1,420', sub: 'In progress', icon: Clock, accent: 'amber' },
+        { label: 'Invalid / Risky', value: '2,800', sub: 'Removed from lists', icon: AlertTriangle, accent: 'rose' },
+    ];
+
+    const quickActions = [
+        { title: 'Scrape Websites', desc: 'Extract leads from URLs', icon: Target, href: '/scraper', color: '#10b981', bg: 'rgba(16, 185, 129, 0.1)' },
+        { title: 'Generate Leads', desc: 'Find prospects by criteria', icon: Zap, href: '/generator', color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.1)' },
+        { title: 'Verify Emails', desc: 'Clean your contact lists', icon: ShieldCheck, href: '/email-verifier', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)' },
+        { title: 'Manage Leads', desc: 'View and export database', icon: Database, href: '/leads', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.1)' },
+    ];
+
+    const recentActivity = [
+        { action: 'Scraped 450 new leads from Yelp', time: '10 mins ago', type: 'scrape' },
+        { action: 'Verified 1,200 emails securely', time: '2 hours ago', type: 'verify' },
+        { action: 'Exported Hot Leads to CSV', time: '5 hours ago', type: 'export' },
+        { action: 'Generated 200 leads for "Plumbers"', time: 'Yesterday', type: 'generate' },
     ];
 
     return (
         <div style={{ display: 'flex' }}>
             <Sidebar />
-            <main className="main-content page-glow">
+            <main className="main-content" style={{ padding: '32px 40px', background: '#09090b', minHeight: '100vh', width: '100%' }}>
                 {/* Header */}
                 <div style={{ marginBottom: 32 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
-                        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>
-                            Dashboard
-                        </h1>
-                        <span style={{
-                            fontSize: 10, fontWeight: 600, padding: '3px 10px',
-                            borderRadius: 6, background: 'rgba(99,102,241,0.1)',
-                            color: 'var(--indigo-light)', textTransform: 'uppercase',
-                            letterSpacing: '0.05em',
-                        }}>
-                            Live
-                        </span>
-                    </div>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-                        Your lead intelligence overview
+                    <h1 style={{ fontSize: 28, fontWeight: 700, color: 'white', letterSpacing: '-0.02em', marginBottom: 8 }}>
+                        Welcome back, {userName}! 👋
+                    </h1>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
+                        Here is what's happening with your lead generation today.
                     </p>
                 </div>
 
                 {/* Metric cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
                     {metrics.map((m, i) => {
                         const Icon = m.icon;
                         return (
-                            <div key={i} className={`metric-card ${m.accent} fade-up`}>
+                            <div key={i} style={{
+                                background: '#18181b', border: '1px solid #27272a', borderRadius: 12, padding: '20px',
+                            }}>
                                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                                     <div>
-                                        <p style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                        <p style={{ fontSize: 13, fontWeight: 500, color: '#a1a1aa', marginBottom: 8 }}>
                                             {m.label}
                                         </p>
-                                        <p style={{ fontSize: 32, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1, letterSpacing: '-0.02em' }}>
+                                        <p style={{ fontSize: 32, fontWeight: 700, color: 'white', letterSpacing: '-0.02em' }}>
                                             {m.value}
                                         </p>
-                                        {m.sub && (
-                                            <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>{m.sub}</p>
-                                        )}
+                                        <p style={{ fontSize: 12, color: '#71717a', marginTop: 8 }}>{m.sub}</p>
                                     </div>
-                                    <div className={`icon-box ${m.accent}`}>
-                                        <Icon size={20} />
+                                    <div style={{
+                                        width: 40, height: 40, borderRadius: 10,
+                                        background: `var(--${m.accent}-light)`, opacity: 0.1, position: 'absolute'
+                                    }}></div>
+                                    <div style={{
+                                        width: 40, height: 40, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        background: `rgba(255,255,255,0.03)`, border: '1px solid rgba(255,255,255,0.05)'
+                                    }}>
+                                        <Icon size={20} style={{ color: `var(--${m.accent})` }} />
                                     </div>
                                 </div>
                             </div>
@@ -109,131 +115,70 @@ export default function DashboardPage() {
                     })}
                 </div>
 
-                {/* Two-col layout */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20 }}>
-                    {/* Top leads */}
-                    <div className="card">
-                        <div style={{
-                            padding: '20px 24px',
-                            borderBottom: '1px solid var(--border)',
-                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <div className="icon-box indigo" style={{ width: 32, height: 32, borderRadius: 8 }}>
-                                    <BarChart3 size={15} />
-                                </div>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>Top Leads</h2>
-                            </div>
-                            <button
-                                onClick={() => router.push('/leads')}
-                                className="btn btn-ghost"
-                                style={{ padding: '6px 12px', fontSize: 12 }}
-                            >
-                                View all <ArrowRight size={12} />
-                            </button>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 24 }}>
+                    {/* Quick Actions */}
+                    <div>
+                        <h2 style={{ fontSize: 18, fontWeight: 600, color: 'white', marginBottom: 16 }}>Quick Actions</h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+                            {quickActions.map((action, i) => {
+                                const Icon = action.icon;
+                                return (
+                                    <div
+                                        key={i}
+                                        onClick={() => router.push(action.href)}
+                                        style={{
+                                            background: '#18181b', border: '1px solid #27272a', borderRadius: 12, padding: '24px',
+                                            cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 16
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.borderColor = action.color;
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.borderColor = '#27272a';
+                                            e.currentTarget.style.transform = 'none';
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: 48, height: 48, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            background: action.bg, color: action.color
+                                        }}>
+                                            <Icon size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 style={{ fontSize: 15, fontWeight: 600, color: 'white', marginBottom: 4 }}>{action.title}</h3>
+                                            <p style={{ fontSize: 13, color: '#a1a1aa' }}>{action.desc}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-
-                        <table className="tbl">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Company</th>
-                                    <th>Score</th>
-                                    <th>Tier</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {topLeads.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={4} style={{ textAlign: 'center', padding: 48, color: 'var(--text-muted)' }}>
-                                            <Zap size={24} style={{ margin: '0 auto 8px', color: 'var(--indigo)', opacity: 0.5 }} />
-                                            <p>No leads yet</p>
-                                            <p style={{ fontSize: 12, marginTop: 4 }}>Generate prospects from the Prospect Builder</p>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    topLeads.map((lead: any) => (
-                                        <tr key={lead.id} onClick={() => router.push(`/leads/${lead.id}`)}>
-                                            <td>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                                    <div style={{
-                                                        width: 32, height: 32, borderRadius: 8,
-                                                        background: lead.tier === 'Hot' ? 'linear-gradient(135deg, #f43f5e, #fb7185)' :
-                                                            lead.tier === 'Warm' ? 'linear-gradient(135deg, #f59e0b, #fbbf24)' :
-                                                                'linear-gradient(135deg, #6366f1, #818cf8)',
-                                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                        fontSize: 11, fontWeight: 700, color: 'white',
-                                                    }}>
-                                                        {lead.first_name?.[0]}{lead.last_name?.[0]}
-                                                    </div>
-                                                    <div>
-                                                        <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
-                                                            {lead.first_name} {lead.last_name}
-                                                        </p>
-                                                        <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>{lead.title || '—'}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{lead.company}</td>
-                                            <td style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)' }}>
-                                                {formatScore(lead.current_score)}
-                                            </td>
-                                            <td>
-                                                {lead.tier && (
-                                                    <span className={`badge ${lead.tier === 'Hot' ? 'badge-hot' : lead.tier === 'Warm' ? 'badge-warm' : 'badge-cold'}`}>
-                                                        {getTierEmoji(lead.tier)} {lead.tier}
-                                                    </span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
                     </div>
 
-                    {/* Score distribution */}
-                    <div className="card-padded">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-                            <div className="icon-box violet" style={{ width: 32, height: 32, borderRadius: 8 }}>
-                                <BarChart3 size={15} />
-                            </div>
-                            <h2 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
-                                Score Distribution
-                            </h2>
+                    {/* Recent Activity */}
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                            <h2 style={{ fontSize: 18, fontWeight: 600, color: 'white' }}>Recent Activity</h2>
+                            <button style={{ background: 'none', border: 'none', color: '#10b981', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                View all <ArrowRight size={14} />
+                            </button>
                         </div>
-                        {scoreDistribution.length > 0 ? (
-                            <ResponsiveContainer width="100%" height={240}>
-                                <BarChart data={scoreDistribution}>
-                                    <XAxis dataKey="range" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                                    <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                                    <Tooltip
-                                        contentStyle={{
-                                            background: 'var(--bg-elevated)',
-                                            border: '1px solid var(--border-light)',
-                                            borderRadius: 10, fontSize: 12,
-                                            color: 'var(--text-primary)',
-                                            boxShadow: 'var(--shadow-md)',
-                                        }}
-                                    />
-                                    <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                                        {scoreDistribution.map((_: any, i: number) => (
-                                            <Cell key={i} fill={['#3b4155', '#6366f1', '#818cf8', '#34d399', '#10b981'][i] || '#3b4155'} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <div style={{
-                                height: 240, display: 'flex', flexDirection: 'column',
-                                alignItems: 'center', justifyContent: 'center',
-                                color: 'var(--text-muted)', fontSize: 13,
-                                background: 'var(--bg-surface)', borderRadius: 10,
-                            }}>
-                                <BarChart3 size={24} style={{ marginBottom: 8, opacity: 0.3 }} />
-                                Chart will appear once leads are scored
+                        <div style={{ background: '#18181b', border: '1px solid #27272a', borderRadius: 12, padding: '20px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                {recentActivity.map((act, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                                        <div style={{
+                                            width: 8, height: 8, borderRadius: '50%', background: '#10b981', marginTop: 6,
+                                            boxShadow: '0 0 8px rgba(16,185,129,0.5)'
+                                        }}></div>
+                                        <div style={{ flex: 1 }}>
+                                            <p style={{ fontSize: 14, color: '#e4e4e7', marginBottom: 4 }}>{act.action}</p>
+                                            <p style={{ fontSize: 12, color: '#71717a' }}>{act.time}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
             </main>

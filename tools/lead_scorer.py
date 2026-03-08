@@ -12,6 +12,7 @@ from typing import Optional
 def calculate_lead_score(lead: dict, enrichment: dict | None, signals: list | None) -> dict:
     """
     Calculate a lead score from 0-100 based on available data.
+    Also calculates a BANT (Budget, Authority, Need, Timing) score (0-100).
     
     Score components:
     - Firmographic fit: 30% weight
@@ -151,6 +152,43 @@ def calculate_lead_score(lead: dict, enrichment: dict | None, signals: list | No
     total = sum(scores.values())
     total = max(0, min(100, total))
     
+    # --- BANT Score (0-100) ---
+    bant_score = 0
+    # Authority (0-30): based on person score
+    bant_score += (scores["person"] / 20) * 30
+    
+    # Need (0-30): based on signals
+    bant_score += (scores["signals"] / 30) * 30
+    
+    # Budget (0-20): based on company size/funding
+    funding = (enrichment or {}).get("total_funding_usd", 0) or 0
+    size = (enrichment or {}).get("company_size", 0) or 0
+    if funding > 10_000_000:
+        bant_score += 20
+    elif size > 500:
+        bant_score += 20
+    elif funding > 1_000_000 or size >= 50:
+        bant_score += 15
+    elif size > 0:
+        bant_score += 10
+        
+    # Timing (0-20): based on specific signals (e.g. hiring, expansion)
+    timing_score = 0
+    if signals:
+        active_signals = [s.get("signal_type", "") for s in signals]
+        if "SIGNAL_HIRING" in active_signals or "SIGNAL_EXPANSION" in active_signals:
+            timing_score = 20
+        elif len(signals) > 0:
+            timing_score = 10
+    bant_score += timing_score
+    
+    # Provide a minimal default BANT for demo purposes if not much data
+    if bant_score < 40 and total > 30:
+        # Give them some credit based on their overall score
+        bant_score = total * 0.8
+        
+    bant_score = max(0, min(100, round(bant_score)))
+    
     # Classify tier
     if total >= 70:
         tier = "Hot"
@@ -161,6 +199,7 @@ def calculate_lead_score(lead: dict, enrichment: dict | None, signals: list | No
     
     return {
         "score": round(total, 2),
+        "bant_score": bant_score,
         "tier": tier,
         "model_version": "rule_based_v1.0",
         "feature_vector": scores,

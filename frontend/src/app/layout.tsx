@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LeadIntel AI — Know Who to Call Before You Dial",
+  title: "Lead Beast — Ultimate Lead Tool",
   description: "AI-powered lead scoring and prioritization platform for B2B sales teams",
 };
 

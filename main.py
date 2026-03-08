@@ -14,6 +14,7 @@ from api.routes.analytics import router as analytics_router
 from api.routes.auth import router as auth_router
 from api.routes.pipeline import router as pipeline_router
 from api.routes.generate import router as generate_router
+from api.routes.tools import router as tools_router
 
 app = FastAPI(
     title="AI Lead Intelligence Platform",
@@ -36,6 +37,7 @@ app.include_router(leads_router, prefix="/v1", tags=["Leads"])
 app.include_router(analytics_router, prefix="/v1", tags=["Analytics"])
 app.include_router(pipeline_router, prefix="/v1", tags=["Pipeline"])
 app.include_router(generate_router, prefix="/v1", tags=["AI Generate"])
+app.include_router(tools_router, prefix="/v1", tags=["Tools"])
 
 
 @app.get("/health")

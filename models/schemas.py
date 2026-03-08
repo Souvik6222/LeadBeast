@@ -91,6 +91,9 @@ class LeadCreate(BaseModel):
     utm_source: Optional[str] = None
     utm_campaign: Optional[str] = None
     seniority_level: Optional[SeniorityLevel] = None
+    tier: Optional[Tier] = None
+    current_score: Optional[float] = None
+    bant_score: Optional[float] = None
 
 
 class LeadBulkCreate(BaseModel):
@@ -141,6 +144,7 @@ class LeadSummary(BaseModel):
     company: str
     title: Optional[str] = None
     current_score: Optional[float] = None
+    bant_score: Optional[float] = 0.0
     tier: Optional[str] = None
     lead_status: str = "new"
     enrichment_status: str = "pending"
@@ -164,6 +168,10 @@ class LeadDetail(LeadSummary):
     score_history: Optional[list] = None
     ai_content: Optional[dict] = None
     activity: Optional[list] = None
+    tech_stack: Optional[list] = []
+    social_links: Optional[list] = []
+    rating: Optional[float] = None
+    review_count: Optional[int] = None
 
 
 class AnalyticsSummary(BaseModel):

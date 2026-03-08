@@ -128,14 +128,15 @@ export default function SignupPage() {
                 <div style={{ position: 'relative', zIndex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 64 }}>
                         <div style={{
-                            width: 40, height: 40, borderRadius: 12,
-                            background: 'var(--gradient-brand)',
+                            width: 44, height: 44, borderRadius: 12,
+                            background: '#0a0c14',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            boxShadow: '0 4px 14px rgba(99,102,241,0.3)',
+                            border: '1px solid rgba(16,185,129,0.2)',
+                            boxShadow: '0 4px 14px rgba(16,185,129,0.15)',
                         }}>
-                            <Zap size={20} color="white" />
+                            <img src="/logo.png" alt="Lead Beast logo" style={{ width: 28, height: 28 }} />
                         </div>
-                        <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>LeadIntel</span>
+                        <span style={{ fontSize: 20, fontWeight: 800, color: 'white', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Lead Beast</span>
                     </div>
 
                     <h2 style={{ fontSize: 28, fontWeight: 800, color: 'white', lineHeight: 1.25, marginBottom: 16 }}>
@@ -143,7 +144,7 @@ export default function SignupPage() {
                         <span className="gradient-text">better data.</span>
                     </h2>
                     <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, lineHeight: 1.7, marginBottom: 44 }}>
-                        Join growing teams using LeadIntel to find, score, and convert ideal customers.
+                        Join growing teams using Lead Beast to find, score, and convert ideal customers.
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -164,7 +165,7 @@ export default function SignupPage() {
                 </div>
 
                 <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', position: 'relative', zIndex: 1 }}>
-                    © 2026 LeadIntel. All rights reserved.
+                    © 2026 Lead Beast. All rights reserved.
                 </p>
             </div>
 
@@ -298,7 +299,7 @@ export default function SignupPage() {
 
                             <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-muted)', marginTop: 28 }}>
                                 Already have an account?{' '}
-                                <Link href="/auth/login" style={{ color: 'var(--indigo-light)', fontWeight: 600 }}>Sign in</Link>
+                                <Link href="/auth/login" style={{ color: 'var(--emerald)', fontWeight: 600 }}>Sign in</Link>
                             </p>
                         </>
                     )}

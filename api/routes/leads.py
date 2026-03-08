@@ -184,7 +184,7 @@ async def get_top_leads(
         supabase.table("leads")
         .select("*")
         .eq("organization_id", org_id)
-        .not_.is_("current_score", "null")
+        .filter("current_score", "not.is", "null")
         .order("current_score", desc=True)
         .limit(limit)
         .execute()

@@ -14,20 +14,56 @@ import dns.resolver
 from typing import Optional
 
 
-# Common email patterns used by companies, ordered by popularity
+# 50+ Common email patterns used by companies
 EMAIL_PATTERNS = [
-    "{first}.{last}",       # john.doe@company.com  (most common)
-    "{first}{last}",        # johndoe@company.com
-    "{f}{last}",            # jdoe@company.com
-    "{first}_{last}",       # john_doe@company.com
-    "{first}",              # john@company.com
-    "{last}.{first}",       # doe.john@company.com
-    "{f}.{last}",           # j.doe@company.com
-    "{last}{f}",            # doej@company.com
-    "{first}-{last}",       # john-doe@company.com
-    "{last}",               # doe@company.com
-    "{f}{last}{fi}",        # jdoe1@ (with first initial as numeric hack — skip)
-    "{first}.{l}",          # john.d@company.com
+    "{first}.{last}",       # john.doe@
+    "{first}{last}",        # johndoe@
+    "{f}{last}",            # jdoe@
+    "{first}_{last}",       # john_doe@
+    "{first}",              # john@
+    "{last}.{first}",       # doe.john@
+    "{f}.{last}",           # j.doe@
+    "{last}{f}",            # doej@
+    "{first}-{last}",       # john-doe@
+    "{last}",               # doe@
+    "{f}{last}{fi}",        # jdoe1@
+    "{first}.{l}",          # john.d@
+    # Added patterns
+    "{first}{l}",           # johnd@
+    "{f}_{last}",           # j_doe@
+    "{last}_{first}",       # doe_john@
+    "{last}_{f}",           # doe_j@
+    "{first}-{l}",          # john-d@
+    "{first}_{l}",          # john_d@
+    "{f}-{last}",           # j-doe@
+    "{f}.{l}",              # j.d@
+    "{f}{l}",               # jd@
+    "{first}.{middle_initial}.{last}", # john.m.doe@ (if middle initial exists)
+    "{first}{middle_initial}{last}",   # johnmdoe@
+    "{f}{middle_initial}{last}",       # jmdoe@
+    "{last}{first}",        # doejohn@
+    "{first} {last}",       # john doe@ (less common but possible in weird systems)
+    "admin", "info", "contact", "hello", "sales", "support", "office", "marketing", # Catch-alls and roles
+    "{last}.{f}",           # doe.j@
+    "{l}{first}",           # djohn@
+    "{l}.{first}",          # d.john@
+    "{l}_{first}",          # d_john@
+    "{last}-{first}",       # doe-john@
+    "{first}{first}",       # johnjohn@
+    "{last}{last}",         # doedoe@
+    "{first}1",             # john1@
+    "{first}2",             # john2@
+    "{first}{last}1",       # johndoe1@
+    "{first}.{last}1",      # john.doe1@
+    "{f}{last}1",           # jdoe1@
+    "{first}01",            # john01@
+    "{first}.{last}01",     # john.doe01@
+    "{last}1",              # doe1@
+    "{first}-{last}1",      # john-doe1@
+    "{first}_{last}1",      # john_doe1@
+    "{f}_{last}1",          # j_doe1@
+    "{f}.{last}1",          # j.doe1@
+    "mail", "inquiries", "management", "careers", "jobs", "billing", "webmaster"
 ]
 
 
@@ -36,26 +72,41 @@ def _clean_name(name: str) -> str:
     return re.sub(r'[^a-z]', '', name.lower().strip())
 
 
-def generate_email_patterns(first_name: str, last_name: str, domain: str) -> list[str]:
+def generate_email_patterns(first_name: str, last_name: str, domain: str, middle_name: str = "") -> list[str]:
     """Generate possible email addresses from name parts and domain."""
     first = _clean_name(first_name)
     last = _clean_name(last_name)
+    middle = _clean_name(middle_name)
 
-    if not first or not last or not domain:
+    if not first and not last:
         return []
+        
+    first = first or "first"
+    last = last or "last"
 
-    f = first[0]   # first initial
-    l = last[0]    # last initial
+    f = first[0] if first else "f"
+    l = last[0] if last else "l"
+    m = middle[0] if middle else ""
 
     emails = []
     for pattern in EMAIL_PATTERNS:
         try:
-            email = pattern.format(first=first, last=last, f=f, l=l, fi="")
-            emails.append(f"{email}@{domain}")
+            # Handle static role-based patterns
+            if "{" not in pattern:
+                if domain:
+                    emails.append(f"{pattern}@{domain}")
+                continue
+            
+            email = pattern.format(first=first, last=last, f=f, l=l, fi="", middle_initial=m)
+            # Remove double dots, trailing dots, etc.
+            email = re.sub(r'\.+', '.', email).strip('.@-_')
+            if email and domain:
+                emails.append(f"{email}@{domain}")
         except (KeyError, IndexError):
             continue
-
-    return emails
+            
+    # Remove duplicates while preserving order
+    return list(dict.fromkeys(emails))
 
 
 def check_mx_record(domain: str) -> list[str]:

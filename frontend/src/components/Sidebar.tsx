@@ -5,13 +5,15 @@ import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import {
     LayoutDashboard, Users, BarChart3, Settings,
-    LogOut, Target, Zap, Flame,
+    LogOut, Target, Zap, ShieldCheck,
 } from 'lucide-react';
 
 const nav = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/leads', label: 'Lead Database', icon: Users },
-    { href: '/leads/generate', label: 'Prospect Builder', icon: Target },
+    { href: '/scraper', label: 'Beast Scraper', icon: Target },
+    { href: '/leads/generate', label: 'Lead Generator', icon: Zap },
+    { href: '/email-verifier', label: 'Email Verifier', icon: ShieldCheck },
+    { href: '/leads', label: 'Lead Manager', icon: Users },
     { href: '/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/settings', label: 'Settings', icon: Settings },
 ];
@@ -34,50 +36,26 @@ export default function Sidebar() {
             }}>
                 <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
-                        width: 36, height: 36, borderRadius: 10,
-                        background: 'var(--gradient-brand)',
+                        width: 40, height: 40, borderRadius: 10,
+                        background: '#0a0c14',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        boxShadow: '0 4px 12px rgba(99,102,241,0.3)',
+                        border: '1px solid rgba(16,185,129,0.2)',
+                        boxShadow: '0 4px 14px rgba(16,185,129,0.15)',
                     }}>
-                        <Zap size={18} color="white" />
+                        <img src="/logo.png" alt="Lead Beast" style={{ width: 24, height: 24 }} />
                     </div>
                     <div>
-                        <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                            LeadIntel
+                        <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+                            Lead Beast
                         </span>
-                        <p style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                            AI Platform
+                        <p style={{ fontSize: 10, color: 'var(--emerald)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                            Ultimate Lead Tool
                         </p>
                     </div>
                 </Link>
             </div>
 
-            {/* Hot leads quick access */}
-            <div style={{ padding: '16px 16px 8px' }}>
-                <Link href="/leads?tier=Hot" style={{ textDecoration: 'none' }}>
-                    <div style={{
-                        padding: '12px 16px',
-                        background: 'rgba(244,63,94,0.06)',
-                        border: '1px solid rgba(244,63,94,0.15)',
-                        borderRadius: 12,
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                    }}>
-                        <Flame size={16} style={{ color: '#fb7185' }} />
-                        <span style={{ fontSize: 13, fontWeight: 600, color: '#fb7185' }}>
-                            Hot Leads
-                        </span>
-                        <span style={{
-                            marginLeft: 'auto', fontSize: 10, padding: '2px 8px',
-                            borderRadius: 6, background: 'rgba(244,63,94,0.12)',
-                            color: '#fb7185', fontWeight: 600,
-                        }}>
-                            Priority
-                        </span>
-                    </div>
-                </Link>
-            </div>
+
 
             {/* Navigation */}
             <nav style={{ flex: 1, padding: '8px 12px' }}>
@@ -89,7 +67,12 @@ export default function Sidebar() {
                     Navigation
                 </p>
                 {nav.map((item) => {
-                    const active = pathname === item.href || pathname?.startsWith(item.href + '/');
+                    let active = false;
+                    if (item.href === '/leads') {
+                        active = pathname === '/leads' || (pathname?.startsWith('/leads/') && !pathname?.startsWith('/leads/generate'));
+                    } else {
+                        active = pathname === item.href || pathname?.startsWith(item.href + '/');
+                    }
                     const Icon = item.icon;
                     return (
                         <Link
@@ -102,13 +85,13 @@ export default function Sidebar() {
                                 fontSize: 13.5,
                                 fontWeight: active ? 600 : 400,
                                 color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
-                                background: active ? 'rgba(99,102,241,0.1)' : 'transparent',
-                                border: active ? '1px solid rgba(99,102,241,0.2)' : '1px solid transparent',
+                                background: active ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                                border: active ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid transparent',
                                 transition: 'all 0.2s',
                             }}
                         >
                             <Icon size={17} style={{
-                                color: active ? 'var(--indigo-light)' : 'var(--text-muted)',
+                                color: active ? 'var(--emerald)' : 'var(--text-muted)',
                                 transition: 'color 0.2s',
                             }} />
                             {item.label}

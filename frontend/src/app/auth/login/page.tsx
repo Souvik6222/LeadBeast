@@ -73,26 +73,27 @@ export default function LoginPage() {
                 }} />
                 <div style={{
                     position: 'absolute', top: '-20%', left: '-20%', width: '80%', height: '80%',
-                    background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)',
                     zIndex: 0,
                 }} />
                 <div style={{
                     position: 'absolute', bottom: '-10%', right: '-10%', width: '60%', height: '60%',
-                    background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
                     zIndex: 0,
                 }} />
 
                 <div style={{ position: 'relative', zIndex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 64 }}>
                         <div style={{
-                            width: 40, height: 40, borderRadius: 12,
-                            background: 'var(--gradient-brand)',
+                            width: 44, height: 44, borderRadius: 12,
+                            background: '#0a0c14',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            boxShadow: '0 4px 14px rgba(99,102,241,0.3)',
+                            border: '1px solid rgba(16,185,129,0.2)',
+                            boxShadow: '0 4px 14px rgba(16,185,129,0.15)',
                         }}>
-                            <Zap size={20} color="white" />
+                            <img src="/logo.png" alt="Lead Beast logo" style={{ width: 28, height: 28 }} />
                         </div>
-                        <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>LeadIntel</span>
+                        <span style={{ fontSize: 20, fontWeight: 800, color: 'white', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>Lead Beast</span>
                     </div>
 
                     <h2 style={{ fontSize: 28, fontWeight: 800, color: 'white', lineHeight: 1.25, marginBottom: 16 }}>
@@ -108,11 +109,11 @@ export default function LoginPage() {
                             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                                 <div style={{
                                     width: 24, height: 24, borderRadius: 8,
-                                    background: 'rgba(99,102,241,0.15)',
+                                    background: 'rgba(16,185,129,0.15)',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     flexShrink: 0,
                                 }}>
-                                    <Check size={12} style={{ color: '#818cf8' }} />
+                                    <Check size={12} style={{ color: '#10b981' }} />
                                 </div>
                                 <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)' }}>{item}</span>
                             </div>
@@ -121,7 +122,7 @@ export default function LoginPage() {
                 </div>
 
                 <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', position: 'relative', zIndex: 1 }}>
-                    © 2026 LeadIntel. All rights reserved.
+                    © 2026 Lead Beast. All rights reserved.
                 </p>
             </div>
 
@@ -206,7 +207,7 @@ export default function LoginPage() {
 
                     <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-muted)', marginTop: 28 }}>
                         Don&apos;t have an account?{' '}
-                        <Link href="/auth/signup" style={{ color: 'var(--indigo-light)', fontWeight: 600 }}>Get started free</Link>
+                        <Link href="/auth/signup" style={{ color: 'var(--emerald)', fontWeight: 600 }}>Get started free</Link>
                     </p>
                 </div>
             </div>

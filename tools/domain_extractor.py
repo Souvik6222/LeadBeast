@@ -13,14 +13,47 @@ def extract_domain_from_email(email: str) -> str | None:
     
     domain = email.split('@')[1].lower()
     
-    # Skip personal email providers
+    # Extended list of personal/free email providers
     free_providers = {
-        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
-        'aol.com', 'icloud.com', 'protonmail.com', 'mail.com',
-        'yandex.com', 'live.com', 'msn.com',
+        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com',
+        'icloud.com', 'protonmail.com', 'mail.com', 'yandex.com', 'live.com',
+        'msn.com', 'zoho.com', 'gmx.com', 'gmx.net', 'inbox.com', 'mail.ru',
+        'fastmail.com', 'tutanota.com', 'tutamail.com', 'pm.me', 'hey.com',
+        'hushmail.com', 'lycos.com', 'rocketmail.com', '163.com', 'qq.com',
+        'rediffmail.com', 'cox.net', 'sbcglobal.net', 'btinternet.com',
+        'mac.com', 'me.com', 'earthlink.net', 'optonline.net', 'comcast.net',
+        'verizon.net', 'att.net', 'bellsouth.net', 'charter.net', 'juno.com',
+        'netzero.net', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.in', 'yahoo.fr',
+        'yahoo.de', 'yahoo.it', 'yahoo.es', 'yahoo.co.jp', 'googlemail.com',
+        'web.de', 't-online.de', 'freenet.de', '126.com', 'yeah.net', 'sina.com',
+        'sohu.com', 'virgilio.it', 'libero.it', 'alice.it', 'mail.fr', 'laposte.net',
+        'orange.fr', 'seznam.cz', 'centrum.cz', 'wp.pl', 'onet.pl', 'interia.pl',
+        'naver.com', 'daum.net', 'hanmail.net', 'nate.com', 'ukr.net', 'i.ua',
+        'meta.ua', 'rambler.ru', 'bk.ru', 'inbox.ru', 'list.ru', 'e1.ru', 'ngs.ru',
+        'mail.ee', 'online.no', 'telia.com', 'tele2.se', 'home.nl', 'planet.nl',
+        'ziggo.nl', 'kpnmail.nl', 'xs4all.nl', 'telenet.be', 'skynet.be', 'scarlet.be',
+        'bluewin.ch', 'hispeed.ch', 'swisscom.com', 'aon.at', 'gmx.at', 'chello.at',
+        'bigpond.com', 'optusnet.com.au', 'iinet.net.au', 'xtra.co.nz',
+        'shaw.ca', 'sympatico.ca', 'rogers.com', 'videotron.ca', 'telus.net'
     }
-    
-    if domain in free_providers:
+
+    # Extended list of gaming domains
+    gaming_domains = {
+        'xboxlive.com', 'playstation.com', 'steamcommunity.com', 'nintendo.com',
+        'epicgames.com', 'ubisoft.com', 'ea.com', 'blizzard.com', 'riotgames.com',
+        'twitch.tv', 'discord.com', 'discordapp.com', 'roblox.com', 'minecraft.net',
+        'origin.com', 'battlenet.com', 'rockstargames.com', 'take2games.com',
+        'activision.com', 'bungie.net', 'bethesda.net', 'square-enix.com',
+        'sega.com', 'capcom.com', 'konami.com', 'bandainamcoent.com', 'nexon.com',
+        'ncsoft.com', 'pearlabyss.com', 'smilegate.com', 'tencentgames.com',
+        'supercell.com', 'zynga.com', 'king.com', 'playrix.com', 'rovio.com',
+        'mojang.com', 'nianticlabs.com', 'garena.com', 'krafton.com', 'pubg.com',
+        'riot.com', 'valvesoftware.com', 'gearboxsoftware.com', 'obsidian.net',
+        'naughtydog.com', 'insomniac.games', 'infinityward.com', 'treyarch.com',
+        'sledgehammergames.com', 'respawn.com', 'bioware.com', 'dice.se'
+    }
+
+    if domain in free_providers or domain in gaming_domains or domain.endswith('.edu') or domain.endswith('.ac.uk'):
         return None
     
     return domain

@@ -55,7 +55,7 @@ async def get_summary(user=Depends(get_current_user)):
         supabase.table("leads")
         .select("current_score")
         .eq("organization_id", org_id)
-        .not_.is_("current_score", "null")
+        .filter("current_score", "not.is", "null")
         .execute()
     )
     
@@ -108,7 +108,7 @@ async def get_score_distribution(user=Depends(get_current_user)):
         supabase.table("leads")
         .select("current_score")
         .eq("organization_id", org_id)
-        .not_.is_("current_score", "null")
+        .filter("current_score", "not.is", "null")
         .execute()
     )
     
